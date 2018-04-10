@@ -16,6 +16,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+#define RE_WGS84    6378137.0           /* earth semimajor axis (WGS84) (m) */
+#define FE_WGS84    (1.0/298.257223563) /* earth flattening (WGS84) */
 
 #define PI          3.1415926535897932  /* pi */
 #define D2R         (PI/180.0)          /* deg to rad */
