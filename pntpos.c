@@ -2,19 +2,14 @@
 // Created by Anissa Wong on 4/10/18.
 //
 
-//
-// Created by Anissa Wong on 4/10/18.
-//
-
 #include "rtklib.h"
 #include <math.h>
-static const char rcsid[]="$Id:$";
 
 /* constants -----------------------------------------------------------------*/
 
 #define SQR(x)      ((x)*(x))
 
-#define NX          (4+3)       /* # of estimated parameters */
+#define NX          (4+3)	/* # of estimated parameters */
 
 #define MAXITR      10          /* max number of iteration for point pos */
 #define ERR_ION     5.0         /* ionospheric delay std (m) */
@@ -37,7 +32,7 @@ const prcopt_t prcopt_default={ /* defaults processing options */
         {1E-4,1E-3,1E-4,1E-1,1E-2}, /* prn[] */
         5E-12,                      /* sclkstab */
         {3.0,0.9999,0.20},          /* thresar */
-        0.0,0.0,0.05,               /* elmaskar,almaskhold,thresslip */
+	0.0,0.0,0.05,               /* elmaskar,almaskhold,thresslip */
         30.0,30.0,30.0,             /* maxtdif,maxinno,maxgdop */
         {0},{0},{0},                /* baseline,ru,rb */
         {"",""},                    /* anttype */
@@ -57,16 +52,15 @@ static double varerr(const prcopt_t *opt, double el, int sys)
 
 static int rescode(int iter, const obsd_t *obs, int n, const double *rs,
                    const double *dts, const double *vare, const int *svh,
-                   const nav_t *nav, const double *x, const prcopt_t *opt,
+		   const nav_t *nav, const double *x, const prcopt_t *opt,
                    double *v, double *H, double *var, double *azel, int *vsat,
                    double *resp, int *ns)
 {
-    double r,dion,dtrp,vmeas,vion,vtrp,rr[3],pos[3],dtr,e[3],P,lam_L1;
+    double r=0,dion=0,dtrp=0,vmeas=0,vion=0,vtrp=0,rr[3],pos[3],dtr,e[3],P=0;
     int i,j,nv=0,sys,mask[4]={0};
 
     trace(3,"resprng : n=%d\n",n);
-
-    for (i=0;i<3;i++) rr[i]=x[i]; dtr=x[3];
+        for (i=0;i<3;i++) rr[i]=x[i]; dtr=x[3];
 
     ecef2pos(rr,pos);
 
@@ -78,19 +72,19 @@ static int rescode(int iter, const obsd_t *obs, int n, const double *rs,
         /* reject duplicated observation data */
         if (i<n-1&&i<MAXOBS-1&&obs[i].sat==obs[i+1].sat) {
             trace(2,"duplicated observation data %s sat=%2d\n",
-                  time_str(obs[i].time,3),obs[i].sat);
+		time_str(obs[i].time,3),obs[i].sat);
             i++;
             continue;
         }
 
-        /* pseudorange residual */
+	/* pseudorange residual */
         v[nv]=P-(r+dtr-CLIGHT*dts[i*2]+dion+dtrp);
 
         /* design matrix */
         for (j=0;j<NX;j++) H[j+nv*NX]=j<3?-e[j]:(j==3?1.0:0.0);
 
         /* time system and receiver bias offset correction */
-        if      (sys==SYS_GLO) {v[nv]-=x[4]; H[4+nv*NX]=1.0; mask[1]=1;}
+        if	(sys==SYS_GLO) {v[nv]-=x[4]; H[4+nv*NX]=1.0; mask[1]=1;}
         else if (sys==SYS_GAL) {v[nv]-=x[5]; H[5+nv*NX]=1.0; mask[2]=1;}
         else if (sys==SYS_CMP) {v[nv]-=x[6]; H[6+nv*NX]=1.0; mask[3]=1;}
         else mask[0]=1;
@@ -98,7 +92,7 @@ static int rescode(int iter, const obsd_t *obs, int n, const double *rs,
         vsat[i]=1; resp[i]=v[nv]; (*ns)++;
 
         /* error variance */
-        var[nv++]=varerr(opt,azel[1+i*2],sys)+vare[i]+vmeas+vion+vtrp;
+	var[nv++]=varerr(opt,azel[1+i*2],sys)+vare[i]+vmeas+vion+vtrp;
 
         trace(4,"sat=%2d azel=%5.1f %4.1f res=%7.3f sig=%5.3f\n",obs[i].sat,
               azel[i*2]*R2D,azel[1+i*2]*R2D,resp[i],sqrt(var[nv-1]));
@@ -116,13 +110,13 @@ static int rescode(int iter, const obsd_t *obs, int n, const double *rs,
 
 
 /* estimate receiver position ------------------------------------------------*/
-static int estpos(const obsd_t *obs, int n, const double *rs, const double *dts,
+int estpos(const obsd_t *obs, int n, const double *rs, const double *dts,
                   const double *vare, const int *svh, const nav_t *nav,
                   const prcopt_t *opt, sol_t *sol, double *azel, int *vsat,
                   double *resp, char *msg)
 {
     double x[NX]={0},dx[NX],Q[NX*NX],*v,*H,*var,sig;
-    int i,j,k,info,stat,nv,ns;
+    int i,j,k,info,stat=0,nv,ns;
 
     trace(3,"estpos  : n=%d\n",n);
 
@@ -135,23 +129,22 @@ static int estpos(const obsd_t *obs, int n, const double *rs, const double *dts,
         /* pseudorange residuals */
         nv=rescode(i,obs,n,rs,dts,vare,svh,nav,x,opt,v,H,var,azel,vsat,resp,
                    &ns);
-
-        if (nv<NX) {
+ 	if (nv<NX) {
             sprintf(msg,"lack of valid sats ns=%d",nv);
             break;
         }
-        /* weight by variance */
+	/* weight by variance */
         for (j=0;j<nv;j++) {
             sig=sqrt(var[j]);
             v[j]/=sig;
             for (k=0;k<NX;k++) H[k+j*NX]/=sig;
         }
-        /* least square estimation */
+	/* least square estimation */
         if ((info=lsq(H,v,NX,nv,dx,Q))) {
             sprintf(msg,"lsq error info=%d",info);
             break;
         }
-        for (j=0;j<NX;j++) x[j]+=dx[j];
+	for (j=0;j<NX;j++) x[j]+=dx[j];
 
         if (norm(dx,NX)<1E-4) {
             sol->type=0;
