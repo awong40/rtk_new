@@ -113,7 +113,6 @@
 #define _POSIX_C_SOURCE 199309
 #include <stdarg.h>
 #include <ctype.h>
-#ifndef WIN32
 #include <dirent.h>
 #include <time.h>
 #include <sys/time.h>
@@ -122,7 +121,7 @@
 
 #include "rtklib.h"
 
-static const char rcsid[]="$Id: rtkcmn.c,v 1.1 2008/07/17 21:48:06 ttaka Exp ttaka $";
+#define LAPACK
 
 /* constants -----------------------------------------------------------------*/
 /* fatal error 339---------------------------------------------------------------*/
@@ -152,6 +151,35 @@ static void fatalerr(const char *format, ...)
     va_start(ap,format); vfprintf(stderr,format,ap); va_end(ap);
     exit(-9);
 }
+/* satellite system+prn/slot number to satellite number ------------------------
+* convert satellite system+prn/slot number to satellite number
+* args   : int    sys       I   satellite system (SYS_GPS,SYS_GLO,...)
+*          int    prn       I   satellite prn/slot number
+* return : satellite number (0:error)
+*-----------------------------------------------------------------------------*/
+extern int satno(int sys, int prn)
+{
+    if (prn<=0) return 0;
+    switch (sys) {
+        case SYS_GPS:
+            if (prn<MINPRNGPS||MAXPRNGPS<prn) return 0;
+            return prn-MINPRNGPS+1;
+        case SYS_GLO:
+            if (prn<MINPRNGLO||MAXPRNGLO<prn) return 0;
+            return NSATGPS+prn-MINPRNGLO+1;
+        case SYS_GAL:
+            if (prn<MINPRNGAL||MAXPRNGAL<prn) return 0;
+            return NSATGPS+NSATGLO+prn-MINPRNGAL+1;
+        case SYS_CMP:
+            if (prn<MINPRNCMP||MAXPRNCMP<prn) return 0;
+            return NSATGPS+NSATGLO+NSATGAL+NSATQZS+prn-MINPRNCMP+1;
+        case SYS_SBS:
+            if (prn<MINPRNSBS||MAXPRNSBS<prn) return 0;
+            return NSATGPS+NSATGLO+NSATGAL+NSATQZS+NSATCMP+NSATLEO+prn-MINPRNSBS+1;
+    }
+    return 0;
+}
+
 /* satellite number to satellite system 380----------------------------------------
 * convert satellite number to satellite system
 * args   : int    sat       I   satellite number (1-MAXSAT)
