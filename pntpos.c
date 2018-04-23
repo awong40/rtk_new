@@ -18,26 +18,6 @@
 #define ERR_BRDCI   0.5         /* broadcast iono model error factor */
 #define ERR_CBIAS   0.3         /* code bias error std (m) */
 #define REL_HUMI    0.7         /* relative humidity for saastamoinen model */
-const prcopt_t prcopt_default={ /* defaults processing options */
-        PMODE_SINGLE,0,2,SYS_GPS,   /* mode,soltype,nf,navsys */
-        15.0*D2R,{{0,0}},           /* elmin,snrmask */
-        0,1,1,1,                    /* sateph,modear,glomodear,bdsmodear */
-        5,0,10,                     /* glomodear,maxout,minlock,minfix */
-        0,0,0,0,                    /* estion,esttrop,dynamics,tidecorr */
-        1,0,0,0,0,                  /* niter,codesmooth,intpref,sbascorr,sbassatsel */
-        0,0,                        /* rovpos,refpos */
-        {100.0,100.0},              /* eratio[] */
-        {100.0,0.003,0.003,0.0,1.0}, /* err[] */
-        {30.0,0.03,0.3},            /* std[] */
-        {1E-4,1E-3,1E-4,1E-1,1E-2}, /* prn[] */
-        5E-12,                      /* sclkstab */
-        {3.0,0.9999,0.20},          /* thresar */
-	0.0,0.0,0.05,               /* elmaskar,almaskhold,thresslip */
-        30.0,30.0,30.0,             /* maxtdif,maxinno,maxgdop */
-        {0},{0},{0},                /* baseline,ru,rb */
-        {"",""},                    /* anttype */
-        {{0}},{{0}},{0}             /* antdel,pcv,exsats */
-};
 
 
 /* pseudorange measurement error variance ------------------------------------*/
