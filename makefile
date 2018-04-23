@@ -1,97 +1,30 @@
 # makefile for rnx2rtkp
 
 BINDIR  = /usr/local/bin
-SRC     = ../../../src
-
+SRC     = /home/ec2-user/rtk_new
 OPTS    = -DTRACE -DENAGLO -DENAQZS -DENAGAL -DNFREQ=3
 
 # for no lapack
 CFLAGS  = -Wall -O3 -ansi -pedantic -Wno-unused-but-set-variable -I$(SRC) $(OPTS) -g
 LDLIBS  = -lm -lrt
 
-#CFLAGS  = -Wall -O3 -ansi -pedantic -Wno-unused-but-set-variable -I$(SRC) -DLAPACK $(OPTS)
-#LDLIBS  = -lm -lrt -llapack -lblas
 
-# for gprof
-#CFLAGS  = -Wall -O3 -ansi -pedantic -Wno-unused-but-set-variable -I$(SRC) -DLAPACK $(OPTS) -pg
-#LDLIBS  = -lm -lrt -llapack -lblas -pg
+all        : main
+rnx2rtkp   : main.o rtkcmn.o pntpos.o 
 
-# for mkl
-#MKLDIR  = /opt/intel/mkl
-#CFLAGS  = -O3 -ansi -pedantic -Wno-unused-but-set-variable -I$(SRC) $(OPTS) -DMKL
-#LDLIBS  = -L$(MKLDIR)/lib/intel64 -lm -lrt -lmkl_core -lmkl_intel_lp64 -lmkl_gnu_thread -liomp5 -lpthread
-
-all        : rnx2rtkp
-rnx2rtkp   : rnx2rtkp.o rtkcmn.o rinex.o rtkpos.o postpos.o solution.o
-rnx2rtkp   : lambda.o geoid.o sbas.o preceph.o pntpos.o ephemeris.o options.o
-rnx2rtkp   : ppp.o ppp_ar.o rtcm.o rtcm2.o rtcm3.o rtcm3e.o ionex.o qzslex.o
-
-rnx2rtkp.o : ../rnx2rtkp.c
-	$(CC) -c $(CFLAGS) ../rnx2rtkp.c
+main.o : $(SRC)/main.c
+	$(CC) -c $(CFLAGS) ../main.c
 rtkcmn.o   : $(SRC)/rtkcmn.c
 	$(CC) -c $(CFLAGS) $(SRC)/rtkcmn.c
-rinex.o    : $(SRC)/rinex.c
-	$(CC) -c $(CFLAGS) $(SRC)/rinex.c
-rtkpos.o   : $(SRC)/rtkpos.c
-	$(CC) -c $(CFLAGS) $(SRC)/rtkpos.c
-postpos.o  : $(SRC)/postpos.c
-	$(CC) -c $(CFLAGS) $(SRC)/postpos.c
-solution.o : $(SRC)/solution.c
-	$(CC) -c $(CFLAGS) $(SRC)/solution.c
-lambda.o   : $(SRC)/lambda.c
-	$(CC) -c $(CFLAGS) $(SRC)/lambda.c
-geoid.o    : $(SRC)/geoid.c
-	$(CC) -c $(CFLAGS) $(SRC)/geoid.c
-sbas.o     : $(SRC)/sbas.c
-	$(CC) -c $(CFLAGS) $(SRC)/sbas.c
-preceph.o  : $(SRC)/preceph.c
-	$(CC) -c $(CFLAGS) $(SRC)/preceph.c
 pntpos.o   : $(SRC)/pntpos.c
 	$(CC) -c $(CFLAGS) $(SRC)/pntpos.c
-ephemeris.o: $(SRC)/ephemeris.c
-	$(CC) -c $(CFLAGS) $(SRC)/ephemeris.c
-options.o  : $(SRC)/options.c
-	$(CC) -c $(CFLAGS) $(SRC)/options.c
-ppp.o      : $(SRC)/ppp.c
-	$(CC) -c $(CFLAGS) $(SRC)/ppp.c
-ppp_ar.o   : $(SRC)/ppp_ar.c
-	$(CC) -c $(CFLAGS) $(SRC)/ppp_ar.c
-rtcm.o     : $(SRC)/rtcm.c
-	$(CC) -c $(CFLAGS) $(SRC)/rtcm.c
-rtcm2.o    : $(SRC)/rtcm2.c
-	$(CC) -c $(CFLAGS) $(SRC)/rtcm2.c
-rtcm3.o    : $(SRC)/rtcm3.c
-	$(CC) -c $(CFLAGS) $(SRC)/rtcm3.c
-rtcm3e.o   : $(SRC)/rtcm3e.c
-	$(CC) -c $(CFLAGS) $(SRC)/rtcm3e.c
-ionex.o    : $(SRC)/ionex.c
-	$(CC) -c $(CFLAGS) $(SRC)/ionex.c
-qzslex.o   : $(SRC)/qzslex.c
-	$(CC) -c $(CFLAGS) $(SRC)/qzslex.c
 
-rnx2rtkp.o : $(SRC)/rtklib.h
+main.o : $(SRC)/rtklib.h
 rtkcmn.o   : $(SRC)/rtklib.h
-rinex.o    : $(SRC)/rtklib.h
-rtkpos.o   : $(SRC)/rtklib.h
-postpos.o  : $(SRC)/rtklib.h
-solution.o : $(SRC)/rtklib.h
-lambda.o   : $(SRC)/rtklib.h
-geoid.o    : $(SRC)/rtklib.h
-sbas.o     : $(SRC)/rtklib.h
-preceph.o  : $(SRC)/rtklib.h
 pntpos.o   : $(SRC)/rtklib.h
-ephemeris.o: $(SRC)/rtklib.h
-options.o  : $(SRC)/rtklib.h
-ppp.o      : $(SRC)/rtklib.h
-ppp_ar.o   : $(SRC)/rtklib.h
-rtcm.o     : $(SRC)/rtklib.h
-rtcm2.o    : $(SRC)/rtklib.h
-rtcm3.o    : $(SRC)/rtklib.h
-rtcm3e.o   : $(SRC)/rtklib.h
-ionex.o    : $(SRC)/rtklib.h
-qzslex.o   : $(SRC)/rtklib.h
 
-CMD1    = ./rnx2rtkp
+
+CMD1    = ./main
 INPUT11 = ../../../test/data/rinex/07590920.05o ../../../test/data/rinex/30400920.05n
 INPUT12 = ../../../test/data/rinex/30400920.05o
 OPTS1   = -r -3978241.958 3382840.234 3649900.853
@@ -152,11 +85,11 @@ test25 :
 	$(CMD1) -k opts4.conf $(INPUT11) $(INPUT12) -y 2 -o test25.pos
 
 clean :
-	rm -f rnx2rtkp rnx2rtkp.exe *.o *.pos *.trace
+	rm -f main main.exe *.o *.pos *.trace
 
 prof :
-	gprof rnx2rtkp > prof.txt
+	gprof main > prof.txt
 
 install :
-	cp rnx2rtkp $(BINDIR)
+	cp main $(BINDIR)
 
