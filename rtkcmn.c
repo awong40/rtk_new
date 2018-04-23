@@ -135,6 +135,10 @@ extern double norm(const double *a, int n)
 {
     return sqrt(dot(a,a,n));
 }
+extern void matcpy(double *A, const double *B, int n, int m)
+{
+    memcpy(A,B,sizeof(double)*n*m);
+}
 extern void matmul(const char *tr, int n, int k, int m, double alpha,
                    const double *A, const double *B, double beta, double *C)
 {
