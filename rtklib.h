@@ -932,4 +932,4 @@ extern void trace    (int level, const char *format, ...);
 #ifdef __cplusplus
 }
 #endif
-#endif /* RTKLIB_H */
+
