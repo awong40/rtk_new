@@ -139,6 +139,10 @@ extern "C" {
 #endif
 
 /* type definitions ----------------------------------------------------------*/
+typedef struct {        /* time struct */
+    time_t time;        /* time (s) expressed by standard time_t */
+    double sec;         /* fraction of second under 1 s */
+} gtime_t;
 typedef struct {        /* solution type */
     gtime_t time;       /* time (GPST) */
     double rr[6];       /* position/velocity (m|m/s) */
