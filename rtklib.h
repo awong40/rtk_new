@@ -157,10 +157,7 @@ typedef struct {        /* solution type */
     float age;          /* age of differential (s) */
     float ratio;        /* AR ratio factor for valiation */
 } sol_t;
-typedef struct {        /* time struct */
-    time_t time;        /* time (s) expressed by standard time_t */
-    double sec;         /* fraction of second under 1 s */
-} gtime_t;
+
 
 typedef struct {        /* observation data record */
     gtime_t time;       /* receiver sampling time (GPST) */
@@ -531,20 +528,6 @@ typedef struct {        /* station parameter type */
     double hgt;         /* antenna height (m) */
 } sta_t;
 
-typedef struct {        /* solution type */
-    gtime_t time;       /* time (GPST) */
-    double rr[6];       /* position/velocity (m|m/s) */
-    /* {x,y,z,vx,vy,vz} or {e,n,u,ve,vn,vu} */
-    float  qr[6];       /* position variance/covariance (m^2) */
-    /* {c_xx,c_yy,c_zz,c_xy,c_yz,c_zx} or */
-    /* {c_ee,c_nn,c_uu,c_en,c_nu,c_ue} */
-    double dtr[6];      /* receiver clock bias to time systems (s) */
-    unsigned char type; /* type (0:xyz-ecef,1:enu-baseline) */
-    unsigned char stat; /* solution status (SOLQ_???) */
-    unsigned char ns;   /* number of valid satellites */
-    float age;          /* age of differential (s) */
-    float ratio;        /* AR ratio factor for valiation */
-} sol_t;
 
 typedef struct {        /* solution buffer type */
     int n,nmax;         /* number of solution/max number of buffer */
