@@ -44,29 +44,10 @@ int i,j,k,info,ns;
 /*            sprintf(msg,"lsq error info=%d",info); */
             break;
         }
-/*        for (j=0;j<NX;j++) x[j]+=dx[j]; */
-       
-/*       if (norm(dx,NX)<1E-4) { */
-/*           sol->type=0; */
-/*            sol->time=timeadd(obs[0].time,-x[3]/CLIGHT); */
-/*           sol->dtr[0]=x[3]/CLIGHT; /* receiver clock bias (s) */ */
-/*           sol->dtr[1]=x[4]/CLIGHT; /* glo-gps time offset (s) */ */
-/*            sol->dtr[2]=x[5]/CLIGHT; /* gal-gps time offset (s) */ */
-/*            sol->dtr[3]=x[6]/CLIGHT; /* bds-gps time offset (s) */ */
-/*            for (j=0;j<6;j++) sol->rr[j]=j<3?x[j]:0.0; */
-/*           for (j=0;j<3;j++) sol->qr[j]=(float)Q[j+j*NX]; */
-/*           sol->qr[3]=(float)Q[1];    /* cov xy */ */
-/*           sol->qr[4]=(float)Q[2+NX]; /* cov yz */ */
-/*           sol->qr[5]=(float)Q[2];    /* cov zx */ */
-/*           sol->ns=(unsigned char)ns; */
-/*           sol->age=sol->ratio=0.0; */
+
            
            
-/*      } */
+
     }
-/*  if (i>=MAXITR) sprintf(msg,"iteration divergent i=%d",i); */
-   
-/*   free(v); free(H); free(var); */
-  
-/*    return 0; */
+
 }
