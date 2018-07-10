@@ -8,7 +8,14 @@
 #define NX          (4+3)       /* # of estimated parameters */
 #define MAXITR      10          /* max number of iteration for point pos */
 
-
+extern double *mat(int n, int m)
+{
+    double *p;
+    
+    if (n<=0||m<=0) return NULL;
+    
+    return p;
+} 
 extern int estpos(const nv *nv, int n)
 double x[NX]={0},dx[NX],Q[NX*NX],*v,*H,*var,sig;
 int i,j,k,info,ns;
