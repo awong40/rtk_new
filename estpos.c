@@ -1,4 +1,5 @@
-/* input ew matlab file NX */
+/* input satpos and pseudorange estimates */
+/* output receiver location */
 /* column [0] = pseudorange residuals */
 /* column [1] = obs bit stream */
 /* column [2] = */
